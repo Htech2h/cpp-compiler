@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ Code Editor</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color:;
+    }        
+
+    #editor {
+      flex-grow: 1;
+      overflow: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      
+    }
+
+    #runButton {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor" contenteditable="true"> <p>
+    #include <iostream>
+#include <vector>
+#include <stack>
+
+class BrainfuckCompiler {
+public:
+    BrainfuckCompiler(const std::string& bfCode) : brainfuckCode(bfCode) {}
+
+    void compile() {
+        std::cout << "#include <iostream>\nint main() {\n";
+        std::cout << "char tape[30000] = {0};\nchar* data = tape;\n";
+        translateBrainfuck();
+        std::cout << "}\n";
+    }
+
+private:
+    void translateBrainfuck() {
+        int dataPointer = 0;
+        std::stack<int> loopStack;
+
+        for (char instruction : brainfuckCode) {
+            switch (instruction) {
+                case '>':
+                    std::cout << "++data;\n";
+                    break;
+                case '<':
+                    std::cout << "--data;\n";
+                    break;
+                case '+':
+                    std::cout << "++(*data);\n";
+                    break;
+                case '-':
+                    std::cout << "--(*data);\n";
+                    break;
+                case '.':
+                    std::cout << "putchar(*data);\n";
+                    break;
+                case ',':
+                    std::cout << "*data = getchar();\n";
+                    break;
+                case '[':
+                    loopStack.push(loopCounter);
+                    std::cout << "while (*data) {\n";
+                    loopCounter++;
+                    break;
+                case ']':
+                    if (loopStack.empty()) {
+                        // Error: unmatched ']'
+                        handleCompilationError("Unmatched ']'");
+                        return;
+                    }
+                    std::cout << "}\n";
+                    loopStack.pop();
+                    break;
+                default:
+                    // Ignore characters other than Brainfuck instructions
+                    break;
+            }
+        }
+
+        if (!loopStack.empty()) {
+            // Error: unmatched '['
+            handleCompilationError("Unmatched '['");
+        }
+    }
+
+    void handleCompilationError(const std::string& errorMessage) {
+        std::cerr << "Compilation Error: " << errorMessage << "\n";
+    }
+
+    std::string brainfuckCode;
+    int loopCounter = 0;
+};
+</p>
+  </div>
+  
+
+<button    id="runButton" onclick="window.location.href='https://htech2h.github.io/Htech2/'">Return to portfolio</button>
+
+  <script>
+    function runCode() {
+      // Add code here to handle running the C++ code
+      // This is just a placeholder function for demonstration purposes
+      alert("Running code...");
+    }
+  </script>
+</body>
+</html>
